@@ -8,7 +8,27 @@ import Title from "../Title";
 import NicheForm from "../NicheForm";
 import { stateToHTML } from "draft-js-export-html";
 import { convertFromRaw } from "draft-js";
-
+import ActivityForm from "../ActivityForm";
+import ActivityTaskForm from "../ActivityTaskForm";
+type ResultDataType = {
+  activity: {
+    name: string;
+    description: string;
+    reward: number;
+    prizes_number: number;
+  };
+  niches: NicheType[];
+};
+type NicheType = {
+  name: string;
+  description: string;
+  task: {
+    name: string;
+    description: string;
+    expiration_date: string;
+    points: number;
+  };
+};
 // Валидатор для эмоджи
 const emojiRegex =
   /(?:\p{Emoji}|\p{Emoji_Presentation}|\p{Extended_Pictographic}){1}/gu;
@@ -36,11 +56,32 @@ const schema = yup.object().shape({
   niche_description_2: yup.string().required("Обязательное поле"),
   niche_name_3: yup.string().required("Обязательное поле"),
   niche_description_3: yup.string().required("Обязательное поле"),
+  activity_task_name_niche_1: yup.string().required("Обязательное поле"),
+  activity_task_description_niche_1: yup.string().required("Обязательное поле"),
+  activity_date_niche_1: yup.date(),
+  activity_task_points_amount_niche_1: yup
+    .number()
+    .typeError("Должно быть числом")
+    .required("Обязательное поле"),
+  activity_task_name_niche_2: yup.string().required("Обязательное поле"),
+  activity_task_description_niche_2: yup.string().required("Обязательное поле"),
+  activity_date_niche_2: yup.date(),
+  activity_task_points_amount_niche_2: yup
+    .number()
+    .typeError("Должно быть числом")
+    .required("Обязательное поле"),
+  activity_task_name_niche_3: yup.string().required("Обязательное поле"),
+  activity_task_description_niche_3: yup.string().required("Обязательное поле"),
+  activity_task_date_niche_3: yup.date(),
+  activity_task_points_amount_niche_3: yup
+    .number()
+    .typeError("Должно быть числом")
+    .required("Обязательное поле"),
   reward: yup
     .number()
     .typeError("Должно быть числом")
     .required("Обязательное поле"),
-  places_count: yup
+  prizes_number: yup
     .number()
     .typeError("Должно быть числом")
     .required("Обязательное поле"),
@@ -70,81 +111,91 @@ const MainForm = () => {
     return htmlContent;
   };
   const onSubmit = (data: any) => {
-    const finalData = {
-      ...data,
-      niche_description_1: parseFormattedTextField(data.niche_description_1),
-      niche_description_2: parseFormattedTextField(data.niche_description_2),
-      niche_description_3: parseFormattedTextField(data.niche_description_3),
-      main_activity_description: parseFormattedTextField(
-        data.main_activity_description
-      ),
+    const {
+      main_activity_emoji,
+      main_activity_name,
+      main_activity_description,
+      niche_name_1,
+      niche_description_1,
+      niche_name_2,
+      niche_description_2,
+      niche_name_3,
+      niche_description_3,
+      activity_task_name_niche_1,
+      activity_task_description_niche_1,
+      activity_task_date_niche_1,
+      activity_task_points_amount_niche_1,
+      activity_task_name_niche_2,
+      activity_task_description_niche_2,
+      activity_task_date_niche_2,
+      activity_task_points_amount_niche_2,
+      activity_task_name_niche_3,
+      activity_task_description_niche_3,
+      activity_task_date_niche_3,
+      activity_task_points_amount_niche_3,
+      reward,
+      prizes_number,
+    } = data;
+
+    const finalData: ResultDataType = {
+      // ...data,
+      activity: {
+        name: `${main_activity_emoji} ${main_activity_name}`,
+        description: parseFormattedTextField(main_activity_description),
+        reward,
+        prizes_number,
+      },
+      niches: [
+        {
+          name: niche_name_1,
+          description: parseFormattedTextField(niche_description_1),
+          task: {
+            name: activity_task_name_niche_1,
+            description: parseFormattedTextField(
+              activity_task_description_niche_1
+            ),
+            expiration_date: activity_task_date_niche_1.toISOString(),
+            points: activity_task_points_amount_niche_1,
+          },
+        },
+        {
+          name: niche_name_2,
+          description: parseFormattedTextField(niche_description_2),
+          task: {
+            name: activity_task_name_niche_2,
+            description: parseFormattedTextField(
+              activity_task_description_niche_2
+            ),
+            expiration_date: activity_task_date_niche_2.toISOString(),
+            points: activity_task_points_amount_niche_2,
+          },
+        },
+        {
+          name: niche_name_3,
+          description: parseFormattedTextField(niche_description_3),
+          task: {
+            name: activity_task_name_niche_3,
+            description: parseFormattedTextField(
+              activity_task_description_niche_3
+            ),
+            expiration_date: activity_task_date_niche_3.toISOString(),
+            points: activity_task_points_amount_niche_3,
+          },
+        },
+      ],
+      // niche_description_1: parseFormattedTextField(data.niche_description_1),
+      // niche_description_2: parseFormattedTextField(data.niche_description_2),
+      // niche_description_3: parseFormattedTextField(data.niche_description_3),
+      // main_activity_description: parseFormattedTextField(
+      //   data.main_activity_description
+      // ),
     };
     console.log(finalData);
   };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="form">
-      <Title title="Название активности" />
-      <div className="form-input_title">
-        <Controller
-          name="main_activity_emoji"
-          control={control}
-          defaultValue=""
-          render={({ field }) => (
-            <div className="form-input_container__emoji">
-              <input
-                className="form-input form-input_emoji"
-                type="text"
-                {...field}
-                placeholder="?"
-              />
-              {errors.main_activity_emoji ? (
-                <p className="error">{errors.main_activity_emoji?.message}</p>
-              ) : (
-                <p className="error"></p>
-              )}
-            </div>
-          )}
-        />
-        <Controller
-          name="main_activity_name"
-          control={control}
-          defaultValue=""
-          render={({ field }) => (
-            <div className="form-input_container">
-              <input
-                className="form-input"
-                type="text"
-                {...field}
-                placeholder="Название активности"
-              />
-              {errors.main_activity_name ? (
-                <p className="error">{errors.main_activity_name?.message}</p>
-              ) : (
-                <p className="error"></p>
-              )}
-            </div>
-          )}
-        />
-      </div>
-      <Title title="Описание активности" />
-      <Controller
-        name="main_activity_description"
-        control={control}
-        defaultValue=""
-        render={({ field }) => (
-          <div className="form-input_container">
-            <FormatTextArea value={field.value} onChange={field.onChange} />
-            {errors.main_activity_description ? (
-              <p className="error">
-                {errors.main_activity_description?.message}
-              </p>
-            ) : (
-              <p className="error"></p>
-            )}
-          </div>
-        )}
-      />
+      <ActivityForm control={control} errors={errors} />
       <NicheForm control={control} errors={errors} id={1} />
       <NicheForm control={control} errors={errors} id={2} />
       <NicheForm control={control} errors={errors} id={3} />
@@ -170,7 +221,7 @@ const MainForm = () => {
       />
       <Title title="Количество призовых мест" />
       <Controller
-        name="places_count"
+        name="prizes_number"
         control={control}
         render={({ field }) => (
           <div>
@@ -180,14 +231,17 @@ const MainForm = () => {
               {...field}
               placeholder="Количество мест"
             />
-            {errors.places_count ? (
-              <p className="error">{errors.places_count?.message}</p>
+            {errors.prizes_number ? (
+              <p className="error">{errors.prizes_number?.message}</p>
             ) : (
               <p className="error"></p>
             )}
           </div>
         )}
       />
+      <ActivityTaskForm control={control} errors={errors} id={1} />
+      <ActivityTaskForm control={control} errors={errors} id={2} />
+      <ActivityTaskForm control={control} errors={errors} id={3} />
       <button type="submit">Отправить</button>
     </form>
   );
