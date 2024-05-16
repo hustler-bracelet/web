@@ -30,12 +30,20 @@ const schema = yup.object().shape({
     ),
   main_activity_name: yup.string().required("Обязательное поле"),
   main_activity_description: yup.string().required("Обязательное поле"),
-  sub_activity_name: yup.string().required("Обязательное поле"),
-  sub_activity_description: yup.string().required("Обязательное поле"),
-  // number: yup
-  //   .number()
-  //   .typeError("Должно быть числом")
-  //   .required("Обязательное поле"),
+  niche_name_1: yup.string().required("Обязательное поле"),
+  niche_description_1: yup.string().required("Обязательное поле"),
+  niche_name_2: yup.string().required("Обязательное поле"),
+  niche_description_2: yup.string().required("Обязательное поле"),
+  niche_name_3: yup.string().required("Обязательное поле"),
+  niche_description_3: yup.string().required("Обязательное поле"),
+  reward: yup
+    .number()
+    .typeError("Должно быть числом")
+    .required("Обязательное поле"),
+  places_count: yup
+    .number()
+    .typeError("Должно быть числом")
+    .required("Обязательное поле"),
 });
 
 let options = {
@@ -55,12 +63,22 @@ const MainForm = () => {
   } = useForm({
     resolver: yupResolver(schema),
   });
-
-  const onSubmit = (data: any) => {
-    const rawContent = JSON.parse(data.sub_activity_description);
+  const parseFormattedTextField = (field: string) => {
+    const rawContent = JSON.parse(field);
     const contentState = convertFromRaw(rawContent);
     const htmlContent = stateToHTML(contentState, options);
-    const finalData = { ...data, sub_activity_description: htmlContent };
+    return htmlContent;
+  };
+  const onSubmit = (data: any) => {
+    const finalData = {
+      ...data,
+      niche_description_1: parseFormattedTextField(data.niche_description_1),
+      niche_description_2: parseFormattedTextField(data.niche_description_2),
+      niche_description_3: parseFormattedTextField(data.niche_description_3),
+      main_activity_description: parseFormattedTextField(
+        data.main_activity_description
+      ),
+    };
     console.log(finalData);
   };
 
@@ -80,8 +98,10 @@ const MainForm = () => {
                 {...field}
                 placeholder="?"
               />
-              {errors.main_activity_emoji && (
-                <p>{errors.main_activity_emoji?.message}</p>
+              {errors.main_activity_emoji ? (
+                <p className="error">{errors.main_activity_emoji?.message}</p>
+              ) : (
+                <p className="error"></p>
               )}
             </div>
           )}
@@ -98,8 +118,10 @@ const MainForm = () => {
                 {...field}
                 placeholder="Название активности"
               />
-              {errors.main_activity_name && (
-                <p>{errors.main_activity_name?.message}</p>
+              {errors.main_activity_name ? (
+                <p className="error">{errors.main_activity_name?.message}</p>
+              ) : (
+                <p className="error"></p>
               )}
             </div>
           )}
@@ -113,27 +135,59 @@ const MainForm = () => {
         render={({ field }) => (
           <div className="form-input_container">
             <FormatTextArea value={field.value} onChange={field.onChange} />
-            {errors.main_activity_description && (
-              <p>{errors.main_activity_description?.message}</p>
+            {errors.main_activity_description ? (
+              <p className="error">
+                {errors.main_activity_description?.message}
+              </p>
+            ) : (
+              <p className="error"></p>
             )}
           </div>
         )}
       />
-      {/* <FormatTextArea /> */}
-      {/* <Controller
-        name="number"
-        control={control}
-        defaultValue={0}
-        render={({ field }) => (
-          <div>
-            <input type="number" {...field} />
-            {errors.number && <p>{errors.number?.message}</p>}
-          </div>
-        )}
-      /> */}
       <NicheForm control={control} errors={errors} id={1} />
       <NicheForm control={control} errors={errors} id={2} />
       <NicheForm control={control} errors={errors} id={3} />
+      <Title title="Призовой фонд (в рублях)" />
+      <Controller
+        name="reward"
+        control={control}
+        render={({ field }) => (
+          <div>
+            <input
+              className="form-input"
+              type="number"
+              {...field}
+              placeholder="Награда (в рублях)"
+            />
+            {errors.reward ? (
+              <p className="error">{errors.reward?.message}</p>
+            ) : (
+              <p className="error"></p>
+            )}
+          </div>
+        )}
+      />
+      <Title title="Количество призовых мест" />
+      <Controller
+        name="places_count"
+        control={control}
+        render={({ field }) => (
+          <div>
+            <input
+              className="form-input"
+              type="number"
+              {...field}
+              placeholder="Количество мест"
+            />
+            {errors.places_count ? (
+              <p className="error">{errors.places_count?.message}</p>
+            ) : (
+              <p className="error"></p>
+            )}
+          </div>
+        )}
+      />
       <button type="submit">Отправить</button>
     </form>
   );

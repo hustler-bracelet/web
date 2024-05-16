@@ -9,7 +9,7 @@ const NicheForm = ({ control, errors, id }: any) => {
       <Title title={`Ниша #${id}`} bold />
       <Title title="Название ниши" />
       <Controller
-        name="sub_activity_name"
+        name={`niche_name_${id}`}
         control={control}
         defaultValue=""
         render={({ field }) => (
@@ -20,22 +20,28 @@ const NicheForm = ({ control, errors, id }: any) => {
               {...field}
               placeholder="Название ниши"
             />
-            {errors.sub_activity_name && (
-              <p>{errors.sub_activity_name?.message}</p>
+            {errors.sub_activity_name ? (
+              <p className="error">{errors.sub_activity_name?.message}</p>
+            ) : (
+              <p className="error"></p>
             )}
           </div>
         )}
       />
       <Title title="Описание ниши" />
       <Controller
-        name="sub_activity_description"
+        name={`niche_description_${id}`}
         control={control}
         defaultValue=""
         render={({ field }) => (
           <div className="form-input_container">
             <FormatTextArea value={field.value} onChange={field.onChange} />
-            {errors.sub_activity_description && (
-              <p>{errors.sub_activity_description?.message}</p>
+            {errors.sub_activity_description ? (
+              <p className="error">
+                {errors.sub_activity_description?.message}
+              </p>
+            ) : (
+              <p className="error"></p>
             )}
           </div>
         )}
