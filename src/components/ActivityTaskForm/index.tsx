@@ -10,6 +10,12 @@ const ActivityTaskForm: React.FC<NestedFormPropsType> = ({
   errors,
   id,
 }) => {
+  const activityTaskNameKey = `activity_task_name_niche_${id}` as const;
+  const activityTaskDescriptionKey =
+    `activity_task_description_niche_${id}` as const;
+  const activityTaskDateKey = `activity_task_date_niche_${id}` as const;
+  const activityPointsKey = `activity_task_points_amount_niche_${id}` as const;
+
   return (
     <div>
       <Title title="Название задания" />
@@ -25,8 +31,8 @@ const ActivityTaskForm: React.FC<NestedFormPropsType> = ({
               {...field}
               placeholder="?"
             />
-            {errors.main_activity_emoji ? (
-              <p className="error">{errors.main_activity_emoji?.message}</p>
+            {errors[activityTaskNameKey] ? (
+              <p className="error">{errors[activityTaskNameKey]?.message}</p>
             ) : (
               <p className="error"></p>
             )}
@@ -41,8 +47,10 @@ const ActivityTaskForm: React.FC<NestedFormPropsType> = ({
         render={({ field }) => (
           <div className="form-input_container">
             <FormatTextArea value={field.value} onChange={field.onChange} />
-            {errors.main_activity_name ? (
-              <p className="error">{errors.main_activity_name?.message}</p>
+            {errors[activityTaskDescriptionKey] ? (
+              <p className="error">
+                {errors[activityTaskDescriptionKey]?.message}
+              </p>
             ) : (
               <p className="error"></p>
             )}
@@ -55,7 +63,14 @@ const ActivityTaskForm: React.FC<NestedFormPropsType> = ({
         control={control}
         defaultValue={new Date()}
         render={({ field }) => (
-          <DatePicker selected={field.value} onChange={field.onChange} />
+          <div>
+            <DatePicker selected={field.value} onChange={field.onChange} />
+            {errors[activityTaskDateKey] ? (
+              <p className="error">{errors[activityTaskDateKey]?.message}</p>
+            ) : (
+              <p className="error"></p>
+            )}
+          </div>
         )}
       />
       <Title title="Количество очков задания" />
@@ -70,8 +85,8 @@ const ActivityTaskForm: React.FC<NestedFormPropsType> = ({
               {...field}
               placeholder="Количество мест"
             />
-            {errors.prizes_number ? (
-              <p className="error">{errors.prizes_number?.message}</p>
+            {errors[activityPointsKey] ? (
+              <p className="error">{errors[activityPointsKey]?.message}</p>
             ) : (
               <p className="error"></p>
             )}
