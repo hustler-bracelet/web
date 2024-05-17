@@ -1,8 +1,12 @@
 import { Controller } from "react-hook-form";
 import FormatTextArea from "../FormatTextArea";
 import Title from "../Title";
+import { NestedFormPropsType } from "../../utils/types";
 
-const ActivityForm = ({ control, errors, id }: any) => {
+const ActivityForm: React.FC<Omit<NestedFormPropsType, "id">> = ({
+  control,
+  errors,
+}) => {
   return (
     <>
       <Title title="Название активности" />

@@ -2,8 +2,12 @@ import React from "react";
 import { Controller } from "react-hook-form";
 import Title from "../Title";
 import FormatTextArea from "../FormatTextArea";
+import { NestedFormPropsType } from "../../utils/types";
 
-const NicheForm = ({ control, errors, id }: any) => {
+const NicheForm: React.FC<NestedFormPropsType> = ({ control, errors, id }) => {
+  const nicheNameKey = `niche_name_${id}` as const;
+  const nicheDescriptionKey = `niche_description_${id}` as const;
+
   return (
     <div className="sub_activity">
       <Title title={`Ниша #${id}`} bold />
@@ -20,8 +24,8 @@ const NicheForm = ({ control, errors, id }: any) => {
               {...field}
               placeholder="Название ниши"
             />
-            {errors.sub_activity_name ? (
-              <p className="error">{errors.sub_activity_name?.message}</p>
+            {errors[nicheNameKey] ? (
+              <p className="error">{errors[nicheNameKey]?.message}</p>
             ) : (
               <p className="error"></p>
             )}
@@ -36,10 +40,8 @@ const NicheForm = ({ control, errors, id }: any) => {
         render={({ field }) => (
           <div className="form-input_container">
             <FormatTextArea value={field.value} onChange={field.onChange} />
-            {errors.sub_activity_description ? (
-              <p className="error">
-                {errors.sub_activity_description?.message}
-              </p>
+            {errors[nicheDescriptionKey] ? (
+              <p className="error">{errors[nicheDescriptionKey]?.message}</p>
             ) : (
               <p className="error"></p>
             )}

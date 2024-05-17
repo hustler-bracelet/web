@@ -3,8 +3,13 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import Title from "../Title";
 import FormatTextArea from "../FormatTextArea";
+import { NestedFormPropsType } from "../../utils/types";
 
-const ActivityTaskForm = ({ control, errors, id }: any) => {
+const ActivityTaskForm: React.FC<NestedFormPropsType> = ({
+  control,
+  errors,
+  id,
+}) => {
   return (
     <div>
       <Title title="Название задания" />
@@ -48,6 +53,7 @@ const ActivityTaskForm = ({ control, errors, id }: any) => {
       <Controller
         name={`activity_task_date_niche_${id}`}
         control={control}
+        defaultValue={new Date()}
         render={({ field }) => (
           <DatePicker selected={field.value} onChange={field.onChange} />
         )}
@@ -64,8 +70,8 @@ const ActivityTaskForm = ({ control, errors, id }: any) => {
               {...field}
               placeholder="Количество мест"
             />
-            {errors.places_count ? (
-              <p className="error">{errors.places_count?.message}</p>
+            {errors.prizes_number ? (
+              <p className="error">{errors.prizes_number?.message}</p>
             ) : (
               <p className="error"></p>
             )}
