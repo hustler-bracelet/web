@@ -8,7 +8,7 @@ import ActivityForm from "../ActivityForm";
 import ActivityTaskForm from "../ActivityTaskForm";
 import { ActivityFormType, ResultDataType } from "../../utils/types";
 import { FORMAT_OPTIONS, SCHEMA } from "../../utils/constants";
-import "./form.css";
+import "./mainForm.css";
 
 const MainForm = () => {
   const {
