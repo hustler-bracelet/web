@@ -17,7 +17,7 @@ import "draft-js/dist/Draft.css";
 import FormatButton from "../FormatButton";
 import "./formatTextArea.css";
 
-const FormatTextArea = ({ value, onChange }: any) => {
+const FormatTextArea = ({ value, onChange, withItalic = false }: any) => {
   const [editorState, setEditorState] = useState(
     value
       ? EditorState.createWithContent(convertFromRaw(JSON.parse(value)))
@@ -63,10 +63,12 @@ const FormatTextArea = ({ value, onChange }: any) => {
           />
         </div>
         <div className="buttons_row">
-          <FormatButton
-            icon={<ItalicSVG />}
-            func={() => toggleStyle("ITALIC")}
-          />
+          {withItalic && (
+            <FormatButton
+              icon={<ItalicSVG />}
+              func={() => toggleStyle("ITALIC")}
+            />
+          )}
           <FormatButton
             icon={<LetterspacingSVG />}
             func={() => toggleStyle("CODE")}
@@ -81,7 +83,7 @@ const FormatTextArea = ({ value, onChange }: any) => {
         editorState={editorState}
         handleKeyCommand={handleKeyCommand}
         onChange={setEditorState}
-        placeholder={"Напиши здесь крутой текст"}
+        placeholder={"Описание"}
         customStyleMap={styleMap}
       />
     </div>

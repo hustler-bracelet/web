@@ -21,7 +21,7 @@ const ActivityForm: React.FC<Omit<NestedFormPropsType, "id">> = ({
                 className="form-input form-input_emoji"
                 type="text"
                 {...field}
-                placeholder="?"
+                placeholder="Emoji"
               />
               {errors.main_activity_emoji ? (
                 <p className="error">{errors.main_activity_emoji?.message}</p>
@@ -59,7 +59,11 @@ const ActivityForm: React.FC<Omit<NestedFormPropsType, "id">> = ({
         defaultValue=""
         render={({ field }) => (
           <div className="form-input_container">
-            <FormatTextArea value={field.value} onChange={field.onChange} />
+            <FormatTextArea
+              value={field.value}
+              onChange={field.onChange}
+              withItalic
+            />
             {errors.main_activity_description ? (
               <p className="error">
                 {errors.main_activity_description?.message}
