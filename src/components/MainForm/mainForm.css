@@ -3,14 +3,15 @@
 }
 .form-input_title {
   display: flex;
-  gap: 10px;
+  gap: 20px;
 }
 .form-input_container {
   width: 100%;
+  position: relative;
 }
 .form-input_container__emoji {
-  width: 46px;
-  min-width: 46px;
+  width: 50%;
+  min-width: 96px;
 }
 .form-input_emoji {
   padding-left: 12px !important;
@@ -31,5 +32,9 @@
   }
 }
 .error {
-  height: 16px;
+  position: absolute;
+  line-height: 20px;
+  white-space: nowrap;
+  font-size: 14px;
+  color: #ff0000;
 }

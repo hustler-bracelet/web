@@ -53,7 +53,7 @@ const ActivityTaskForm: React.FC<NestedFormPropsType> = ({
               className="form-input"
               type="text"
               {...field}
-              placeholder="?"
+              placeholder="Название задания"
             />
             {errors[activityTaskNameKey] ? (
               <p className="error">{errors[activityTaskNameKey]?.message}</p>
