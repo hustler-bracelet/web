@@ -6,7 +6,14 @@ type Props = {
 
 const FormatButton: React.FC<Props> = ({ icon, func }) => {
   return (
-    <button className="button" onClick={() => func()}>
+    <button
+      className="button"
+      onClick={(event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        func();
+      }}
+    >
       {icon}
     </button>
   );
