@@ -1,0 +1,42 @@
+.react-datepicker-wrapper {
+  width: 100%;
+}
+.react-datepicker-ignore-onclickoutside {
+  width: 100% !important;
+}
+
+.react-datepicker__input-container input {
+  width: 100%;
+}
+.form-input {
+  width: 100%;
+  padding: 7px;
+  border-radius: 6px;
+  font-size: 16px;
+  background: #fbfbfb;
+  border: 2px solid transparent;
+  height: 36px;
+  box-shadow: 0 0 0 1px #dddddd, 0 2px 4px 0 rgb(0 0 0 / 7%),
+    0 1px 1.5px 0 rgb(0 0 0 / 5%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  :focus {
+    border: 2px solid #000;
+    border-radius: 4px;
+  }
+}
+/* For Firefox */
+
+input[type="number"] {
+  appearance: textfield;
+  -moz-appearance: textfield;
+}
+
+/* Webkit browsers like Safari and Chrome */
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}

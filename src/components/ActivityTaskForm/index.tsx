@@ -4,6 +4,9 @@ import "react-datepicker/dist/react-datepicker.css";
 import Title from "../Title";
 import FormatTextArea from "../FormatTextArea";
 import { NestedFormPropsType } from "../../utils/types";
+import "./activityTaskForm.css";
+import { forwardRef } from "react";
+import CalendarSVG from "../../assets/icons/Calendar";
 
 const ActivityTaskForm: React.FC<NestedFormPropsType> = ({
   control,
@@ -15,6 +18,27 @@ const ActivityTaskForm: React.FC<NestedFormPropsType> = ({
     `activity_task_description_niche_${id}` as const;
   const activityTaskDateKey = `activity_task_date_niche_${id}` as const;
   const activityPointsKey = `activity_task_points_amount_niche_${id}` as const;
+  //@ts-ignore
+  const DatepickerCustomInput = forwardRef(
+    //@ts-ignore
+    ({ value, onClick }, ref) => (
+      //@ts-ignore
+      <button
+        className="form-input"
+        onClick={(event) => {
+          event.preventDefault();
+          event.stopPropagation();
+          onClick(event);
+        }}
+        //@ts-ignore
+        ref={ref}
+        value={value}
+      >
+        <CalendarSVG />
+        {value}
+      </button>
+    )
+  );
 
   return (
     <div>
@@ -64,7 +88,16 @@ const ActivityTaskForm: React.FC<NestedFormPropsType> = ({
         defaultValue={new Date()}
         render={({ field }) => (
           <div>
-            <DatePicker selected={field.value} onChange={field.onChange} />
+            <DatePicker
+              selected={field.value}
+              onChange={field.onChange}
+              minDate={new Date()}
+              showTimeSelect
+              timeFormat="HH:mm"
+              timeIntervals={15}
+              dateFormat="dd/MM/yyyy HH:mm"
+              customInput={<DatepickerCustomInput />}
+            />
             {errors[activityTaskDateKey] ? (
               <p className="error">{errors[activityTaskDateKey]?.message}</p>
             ) : (
