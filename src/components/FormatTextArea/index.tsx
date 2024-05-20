@@ -82,7 +82,8 @@ const FormatTextArea: React.FC<FormatTextAreaProps> = ({
 
   const styleMap = {
     SPOILER: {
-      backgroundColor: "gray",
+      backgroundColor: "var(--tg-theme-hint-color, gray)",
+      color: "var(--tg-theme-text-color, #000)",
     },
   };
 
@@ -115,7 +116,6 @@ const FormatTextArea: React.FC<FormatTextAreaProps> = ({
             icon={<SpoilerSVG />}
             func={() => {
               toggleStyle("SPOILER");
-              focusEditor();
             }}
           />
         </div>
