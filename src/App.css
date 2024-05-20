@@ -2,5 +2,17 @@
   text-align: center;
   width: 100%;
   padding: 10px;
-  background: #ececec;
+  background: var(--tg-theme-bg-color, #ececec);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5 {
+  color: var(--tg-theme-section-header-text-color, #000);
+}
+
+p {
+  color: var(--tg-theme-text-color, #000);
 }

@@ -5,7 +5,7 @@ const ItalicSVG = () => {
       height="24px"
       viewBox="0 -960 960 960"
       width="24px"
-      fill="#000"
+      fill="var(--tg-theme-button-text-color)"
     >
       <path d="M200-200v-100h160l120-360H320v-100h400v100H580L460-300h140v100H200Z" />
     </svg>

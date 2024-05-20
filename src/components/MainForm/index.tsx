@@ -1,56 +1,57 @@
-import { useForm, Controller } from "react-hook-form";
+import { useForm, Controller, useFieldArray } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import Title from "../Title";
 import NicheForm from "../NicheForm";
-import { stateToHTML } from "draft-js-export-html";
-import { convertFromRaw } from "draft-js";
 import ActivityForm from "../ActivityForm";
 import ActivityTaskForm from "../ActivityTaskForm";
-import { ActivityFormType, ResultDataType } from "../../utils/types";
-import { FORMAT_OPTIONS, SCHEMA } from "../../utils/constants";
+import { ActivityFormType, NicheType, ResultDataType } from "../../utils/types";
+import { SCHEMA, TELEGRAM } from "../../utils/constants";
 import "./mainForm.css";
+import { useEffect, useState } from "react";
+import { handleFocus, parseFormattedTextField } from "../../utils/tools";
+import Button from "../Button";
 
 const MainForm = () => {
   const {
+    setFocus,
     handleSubmit,
     control,
     formState: { errors },
   } = useForm<ActivityFormType>({
     resolver: yupResolver(SCHEMA),
+    shouldFocusError: false,
   });
-  const parseFormattedTextField = (field: string) => {
-    const rawContent = JSON.parse(field);
-    const contentState = convertFromRaw(rawContent);
-    const htmlContent = stateToHTML(contentState, FORMAT_OPTIONS);
-    return htmlContent;
+
+  useEffect(() => {
+    handleFocus(errors);
+  }, [errors, setFocus]);
+  const onError = (errors: any, e: any) => console.log("ERRORS: ", errors);
+  const [nichesCount, setNichesCount] = useState<number>(0);
+
+  const setFocusOnLastNiche = () => {
+    const lastNicheIndex = fields.length - 2;
+    if (lastNicheIndex >= 0) {
+      const lastNicheInput = document.querySelector(
+        `[name="niches.${lastNicheIndex}.niche_name"]`
+      ) as HTMLInputElement;
+      lastNicheInput?.focus();
+    }
   };
-  const onSubmit = (data: any) => {
+
+  const removeNiche = (index: number) => {
+    remove(index);
+    setNichesCount((state) => state - 1);
+    setTimeout(setFocusOnLastNiche, 1);
+  };
+
+  const onSubmit = (data: ActivityFormType) => {
     const {
       main_activity_emoji,
       main_activity_name,
       main_activity_description,
-      niche_name_1,
-      niche_description_1,
-      niche_name_2,
-      niche_description_2,
-      niche_name_3,
-      niche_description_3,
-      activity_task_name_niche_1,
-      activity_task_description_niche_1,
-      activity_task_date_niche_1,
-      activity_task_points_amount_niche_1,
-      activity_task_name_niche_2,
-      activity_task_description_niche_2,
-      activity_task_date_niche_2,
-      activity_task_points_amount_niche_2,
-      activity_task_name_niche_3,
-      activity_task_description_niche_3,
-      activity_task_date_niche_3,
-      activity_task_points_amount_niche_3,
       reward,
       prizes_number,
     } = data;
-
     const finalData: ResultDataType = {
       activity: {
         name: `${main_activity_emoji} ${main_activity_name}`,
@@ -58,99 +59,193 @@ const MainForm = () => {
         reward,
         prizes_number,
       },
-      niches: [
-        {
-          name: niche_name_1,
-          description: parseFormattedTextField(niche_description_1),
-          task: {
-            name: activity_task_name_niche_1,
-            description: parseFormattedTextField(
-              activity_task_description_niche_1
-            ),
-            expiration_date: activity_task_date_niche_1.toISOString(),
-            points: activity_task_points_amount_niche_1,
-          },
-        },
-        {
-          name: niche_name_2,
-          description: parseFormattedTextField(niche_description_2),
-          task: {
-            name: activity_task_name_niche_2,
-            description: parseFormattedTextField(
-              activity_task_description_niche_2
-            ),
-            expiration_date: activity_task_date_niche_2.toISOString(),
-            points: activity_task_points_amount_niche_2,
-          },
-        },
-        {
-          name: niche_name_3,
-          description: parseFormattedTextField(niche_description_3),
-          task: {
-            name: activity_task_name_niche_3,
-            description: parseFormattedTextField(
-              activity_task_description_niche_3
-            ),
-            expiration_date: activity_task_date_niche_3.toISOString(),
-            points: activity_task_points_amount_niche_3,
-          },
-        },
-      ],
+      niches:
+        data.niches?.map((niche) => {
+          const nicheObj: NicheType = {
+            name: niche.niche_name,
+            description: parseFormattedTextField(niche.niche_description),
+            task: {
+              name: niche.activity_task_name,
+              description: parseFormattedTextField(
+                niche.activity_task_description
+              ),
+              expiration_date: niche.activity_task_date.toISOString(),
+              points: niche.activity_task_points_amount,
+            },
+          };
+          return nicheObj;
+        }) || [],
     };
-    console.log(finalData);
+    TELEGRAM.showPopup(
+      {
+        message: "Подтверди отправку формы",
+        buttons: [
+          {
+            id: "submit",
+            type: "default",
+            text: "Подтвердить",
+          },
+          {
+            id: "cancel",
+            type: "cancel",
+            text: "Отменить",
+          },
+        ],
+      },
+      (buttonId) => {
+        if (buttonId === "submit") {
+          TELEGRAM.showAlert("Форма успешно отправлена!");
+          console.log(finalData);
+        }
+      }
+    );
   };
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const handledSubmit = () => {
+    handleSubmit(onSubmit)();
+  };
+
+  useEffect(() => {
+    // Инициализация mainButton
+    TELEGRAM.MainButton.setText("Отправить");
+    TELEGRAM.MainButton.show();
+
+    // Обработчик нажатия на mainButton
+    TELEGRAM.onEvent("mainButtonClicked", handledSubmit);
+
+    // Убираем mainButton при размонтировании компонента
+    TELEGRAM.onEvent("mainButtonClicked", handledSubmit);
+    return () => {
+      TELEGRAM.offEvent("mainButtonClicked", handledSubmit);
+    };
+  }, [handledSubmit]);
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: "niches",
+  });
+
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="form">
-      <ActivityForm control={control} errors={errors} />
-      <NicheForm control={control} errors={errors} id={"1"} />
-      <NicheForm control={control} errors={errors} id={"2"} />
-      <NicheForm control={control} errors={errors} id={"3"} />
-      <Title title="Призовой фонд (в рублях)" />
-      <Controller
-        name="reward"
-        control={control}
-        render={({ field }) => (
-          <div>
-            <input
-              className="form-input"
-              type="number"
-              {...field}
-              placeholder="Награда (в рублях)"
-            />
-            {errors.reward ? (
-              <p className="error">{errors.reward?.message}</p>
-            ) : (
-              <p className="error"></p>
+    <div>
+      <form onSubmit={handleSubmit(onSubmit, onError)} className="form">
+        <div className="section">
+          <ActivityForm control={control} errors={errors} />
+        </div>
+        <div className="section">
+          <Title title="💵 Призовой фонд (в рублях)" size="sub" />
+          <Controller
+            name="reward"
+            control={control}
+            render={({ field }) => (
+              <div className="form-input_container">
+                <input
+                  className="form-input"
+                  type="number"
+                  {...field}
+                  placeholder="Награда (в рублях)"
+                />
+                {errors.reward ? (
+                  <p className="error">{errors.reward?.message}</p>
+                ) : (
+                  <p className="error"></p>
+                )}
+              </div>
             )}
-          </div>
-        )}
-      />
-      <Title title="Количество призовых мест" />
-      <Controller
-        name="prizes_number"
-        control={control}
-        render={({ field }) => (
-          <div>
-            <input
-              className="form-input"
-              type="number"
-              {...field}
-              placeholder="Количество мест"
-            />
-            {errors.prizes_number ? (
-              <p className="error">{errors.prizes_number?.message}</p>
-            ) : (
-              <p className="error"></p>
+          />
+          <Title title="🏆 Количество призовых мест" size="sub" />
+          <Controller
+            name="prizes_number"
+            control={control}
+            render={({ field }) => (
+              <div className="form-input_container">
+                <input
+                  className="form-input"
+                  type="number"
+                  {...field}
+                  placeholder="Количество мест"
+                />
+                {errors.prizes_number ? (
+                  <p className="error">{errors.prizes_number?.message}</p>
+                ) : (
+                  <p className="error"></p>
+                )}
+              </div>
             )}
+          />
+        </div>
+        {fields.map((field, index) => (
+          <div className="section" key={field.id}>
+            <NicheForm control={control} errors={errors} id={index} />
+            <ActivityTaskForm control={control} errors={errors} id={index} />
+            <Button
+              text="Удалить нишу"
+              type="button"
+              onClick={() => {
+                TELEGRAM && TELEGRAM.HapticFeedback.impactOccurred("light");
+                TELEGRAM &&
+                  TELEGRAM.showPopup(
+                    {
+                      message: `Подтверди удаление ниши #${index + 1}`,
+                      buttons: [
+                        {
+                          id: "submit",
+                          type: "destructive",
+                          text: "Удалить",
+                        },
+                        {
+                          id: "cancel",
+                          type: "cancel",
+                          text: "Отменить",
+                        },
+                      ],
+                    },
+                    (buttonId) => {
+                      if (buttonId === "submit") removeNiche(index);
+                    }
+                  );
+                !TELEGRAM && removeNiche(index);
+                removeNiche(index);
+              }}
+            />
           </div>
-        )}
-      />
-      <ActivityTaskForm control={control} errors={errors} id={"1"} />
-      <ActivityTaskForm control={control} errors={errors} id={"2"} />
-      <ActivityTaskForm control={control} errors={errors} id={"3"} />
-      <button type="submit">Отправить</button>
-    </form>
+        ))}
+        <div>
+          <Title
+            title={`⚙️ Количество ниш: ${fields.length}`}
+            bold
+            size="default"
+          />
+          {errors.niches ? (
+            <p className="error">{errors.niches.message}</p>
+          ) : (
+            <p className="error"></p>
+          )}
+        </div>
+        <Button
+          text="Добавить нишу"
+          type="button"
+          onClick={() => {
+            TELEGRAM && TELEGRAM.HapticFeedback.impactOccurred("light");
+            append(
+              {
+                niche_name: "",
+                niche_description: "",
+                //@ts-ignore
+                activity_task_date: null,
+                activity_task_description: "",
+                activity_task_name: "",
+                //@ts-ignore
+                activity_task_points_amount: "",
+              },
+              {
+                focusName: `niches.${nichesCount}.niche_name`,
+              }
+            );
+            setNichesCount((state) => state + 1);
+          }}
+        />
+      </form>
+    </div>
   );
 };
 

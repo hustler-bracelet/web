@@ -24,7 +24,7 @@ type TaskType = {
  * @property {string} description - описание ниши
  * @property {TaskType | Record<string, never>} task - задание, прикрепленное к нише (ниша может не иметь задания)
  */
-type NicheType = {
+export type NicheType = {
   name: string;
   description: string;
   task: TaskType | Record<string, never>;
@@ -59,6 +59,15 @@ export type ResultDataType = {
   niches: NicheType[];
 };
 
+export type NicheFormType = {
+  niche_name: string;
+  niche_description: string;
+  activity_task_name: string;
+  activity_task_description: string;
+  activity_task_date: Date;
+  activity_task_points_amount: number;
+};
+
 /**
  * Поля формы
  *
@@ -69,24 +78,7 @@ export type ActivityFormType = {
   main_activity_emoji: string;
   main_activity_name: string;
   main_activity_description: string;
-  niche_name_1: string;
-  niche_description_1: string;
-  niche_name_2: string;
-  niche_description_2: string;
-  niche_name_3: string;
-  niche_description_3: string;
-  activity_task_name_niche_1: string;
-  activity_task_description_niche_1: string;
-  activity_task_date_niche_1: Date;
-  activity_task_points_amount_niche_1: number;
-  activity_task_name_niche_2: string;
-  activity_task_description_niche_2: string;
-  activity_task_date_niche_2: Date;
-  activity_task_points_amount_niche_2: number;
-  activity_task_name_niche_3: string;
-  activity_task_description_niche_3: string;
-  activity_task_date_niche_3: Date;
-  activity_task_points_amount_niche_3: number;
+  niches?: NicheFormType[];
   reward: number;
   prizes_number: number;
 };
@@ -100,5 +92,5 @@ export type ActivityFormType = {
 export type NestedFormPropsType = {
   control: Control<ActivityFormType>;
   errors: FieldErrors<ActivityFormType>;
-  id: "1" | "2" | "3";
+  id: number;
 };

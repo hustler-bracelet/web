@@ -1,11 +1,10 @@
 div.DraftEditor-root {
-  /* border: 2px solid #000; */
-  padding: 15px 10px;
-  border-radius: 12px;
-  box-shadow: transparent 0 0 0 3px, rgba(18, 18, 18, 0.1) 0 6px 20px;
+  padding: 10px 12px;
+  border-radius: 18px;
   height: 150px;
   width: 100%;
-  background-color: #fff;
+  background: var(--tg-theme-secondary-bg-color, #fbfbfb);
+  color: var(--tg-theme-text-color, #000);
   overflow-x: hidden;
   overflow-y: auto;
 }
@@ -13,18 +12,25 @@ div.DraftEditor-editorContainer,
 div.public-DraftEditor-content {
   height: 100%;
 }
+.public-DraftEditorPlaceholder-inner {
+  color: var(--tg-theme-hint-color, gray);
+  opacity: 1;
+}
 .container {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
 }
 .buttons {
+  margin: 0 10px;
+  padding: 10px 0;
   display: flex;
   justify-content: flex-start;
   align-items: flex-start;
   flex-wrap: wrap;
+  border-bottom: 1px solid var(--tg-theme-subtitle-text-color, gray);
   gap: 8px;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
 .buttons_row {
   display: flex;
@@ -34,4 +40,18 @@ div.public-DraftEditor-content {
 }
 .tg-spoiler {
   background-color: black;
+}
+.withBorder {
+  border-radius: 18px;
+  border: 2px solid var(--tg-theme-button-color, blue);
+}
+.withoutBorder {
+  border-radius: 18px;
+  border: 2px solid rgba(0, 0, 0, 0);
+}
+.text-area_container {
+  border-radius: 18px;
+  width: 100%;
+  background: var(--tg-theme-secondary-bg-color, #fbfbfb);
+  color: var(--tg-theme-text-color, #000);
 }

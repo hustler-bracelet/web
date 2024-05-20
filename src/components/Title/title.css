@@ -1,14 +1,20 @@
-.container {
+.title_container {
   width: 100%;
   display: flex;
   justify-content: flex-start;
 }
 .title_big {
   font-size: 28px;
-  margin: 20px 0;
+  line-height: 54px;
+  margin-bottom: 10px;
 }
 .title_default {
   font-size: 20px;
+  line-height: 34px;
   font-weight: 500;
-  margin: 15px 0;
+}
+.title_sub {
+  font-size: 16px;
+  line-height: 30px;
+  font-weight: 500;
 }

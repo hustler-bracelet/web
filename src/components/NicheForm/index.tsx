@@ -5,15 +5,12 @@ import FormatTextArea from "../FormatTextArea";
 import { NestedFormPropsType } from "../../utils/types";
 
 const NicheForm: React.FC<NestedFormPropsType> = ({ control, errors, id }) => {
-  const nicheNameKey = `niche_name_${id}` as const;
-  const nicheDescriptionKey = `niche_description_${id}` as const;
-
   return (
-    <div className="sub_activity">
-      <Title title={`Ниша #${id}`} bold />
-      <Title title="Название ниши" />
+    <div className="container">
+      <Title title={`📌 Ниша #${id + 1}`} bold size="default" />
+      <Title title="📝 Название ниши" size="sub" />
       <Controller
-        name={`niche_name_${id}`}
+        name={`niches.${id}.niche_name`}
         control={control}
         defaultValue=""
         render={({ field }) => (
@@ -24,24 +21,33 @@ const NicheForm: React.FC<NestedFormPropsType> = ({ control, errors, id }) => {
               {...field}
               placeholder="Название ниши"
             />
-            {errors[nicheNameKey] ? (
-              <p className="error">{errors[nicheNameKey]?.message}</p>
+            {errors.niches?.[id]?.niche_name ? (
+              <p className="error">
+                {errors.niches?.[id]?.niche_name?.message}
+              </p>
             ) : (
               <p className="error"></p>
             )}
           </div>
         )}
       />
-      <Title title="Описание ниши" />
+      <Title title="📝 Описание ниши" size="sub" />
       <Controller
-        name={`niche_description_${id}`}
+        name={`niches.${id}.niche_description`}
         control={control}
         defaultValue=""
         render={({ field }) => (
           <div className="form-input_container">
-            <FormatTextArea value={field.value} onChange={field.onChange} />
-            {errors[nicheDescriptionKey] ? (
-              <p className="error">{errors[nicheDescriptionKey]?.message}</p>
+            <FormatTextArea
+              value={field.value}
+              onChange={field.onChange}
+              errors={errors}
+              name={`niches.${id}.niche_description`}
+            />
+            {errors.niches?.[id]?.niche_description ? (
+              <p className="error">
+                {errors.niches?.[id]?.niche_description?.message}
+              </p>
             ) : (
               <p className="error"></p>
             )}

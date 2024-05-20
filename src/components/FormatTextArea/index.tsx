@@ -5,7 +5,7 @@ import StrikethroughSVG from "../../assets/icons/StrikeThrough";
 import LetterspacingSVG from "../../assets/icons/Letterspacing";
 import SpoilerSVG from "../../assets/icons/Spoiler";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   Editor,
   EditorState,
@@ -16,13 +16,50 @@ import {
 import "draft-js/dist/Draft.css";
 import FormatButton from "../FormatButton";
 import "./formatTextArea.css";
-
-const FormatTextArea = ({ value, onChange, withItalic = false }: any) => {
+import { TELEGRAM } from "../../utils/constants";
+import { FieldErrors } from "react-hook-form";
+import { ActivityFormType } from "../../utils/types";
+import { handleFocus } from "../../utils/tools";
+type FormatTextAreaProps = {
+  value: string;
+  onChange: (value: string) => void;
+  withItalic?: boolean;
+  errors: FieldErrors<ActivityFormType>;
+  name: string;
+};
+const FormatTextArea: React.FC<FormatTextAreaProps> = ({
+  value,
+  onChange,
+  withItalic = false,
+  errors,
+  name,
+}) => {
   const [editorState, setEditorState] = useState(
     value
       ? EditorState.createWithContent(convertFromRaw(JSON.parse(value)))
       : EditorState.createEmpty()
   );
+  const [focus, setFocus] = useState<boolean>(false);
+  const editor = useRef(null);
+
+  function focusEditor() {
+    if (editor.current) {
+      //@ts-ignore
+      editor.current.focus();
+    }
+  }
+
+  useEffect(() => {
+    const element = handleFocus(errors);
+    const nameArr = name.split(".");
+
+    if (nameArr.length === 3) {
+      if (`${nameArr[0]}.${nameArr[1]}.${element}` === name) focusEditor();
+    }
+    if (nameArr.length === 1) {
+      if (element === name) focusEditor();
+    }
+  }, [errors, name]);
 
   useEffect(() => {
     const contentState = editorState.getCurrentContent();
@@ -39,6 +76,7 @@ const FormatTextArea = ({ value, onChange, withItalic = false }: any) => {
   };
 
   const toggleStyle = (style: string) => {
+    TELEGRAM.HapticFeedback.impactOccurred("light");
     setEditorState(RichUtils.toggleInlineStyle(editorState, style));
   };
 
@@ -49,7 +87,7 @@ const FormatTextArea = ({ value, onChange, withItalic = false }: any) => {
   };
 
   return (
-    <div className="container">
+    <div className="text-area_container">
       <div className="buttons">
         <div className="buttons_row">
           <FormatButton icon={<BoldSVG />} func={() => toggleStyle("BOLD")} />
@@ -75,17 +113,25 @@ const FormatTextArea = ({ value, onChange, withItalic = false }: any) => {
           />
           <FormatButton
             icon={<SpoilerSVG />}
-            func={() => toggleStyle("SPOILER")}
+            func={() => {
+              toggleStyle("SPOILER");
+              focusEditor();
+            }}
           />
         </div>
       </div>
-      <Editor
-        editorState={editorState}
-        handleKeyCommand={handleKeyCommand}
-        onChange={setEditorState}
-        placeholder={"Описание"}
-        customStyleMap={styleMap}
-      />
+      <div className={focus ? "withBorder" : "withoutBorder"}>
+        <Editor
+          ref={editor}
+          onFocus={() => setFocus(true)}
+          onBlur={() => setFocus(false)}
+          editorState={editorState}
+          handleKeyCommand={handleKeyCommand}
+          onChange={setEditorState}
+          placeholder={"Описание"}
+          customStyleMap={styleMap}
+        />
+      </div>
     </div>
   );
 };

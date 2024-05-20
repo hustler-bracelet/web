@@ -1,40 +1,70 @@
 .form {
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  min-height: 100vh;
 }
 .form-input_title {
+  width: 100%;
   display: flex;
   gap: 20px;
 }
 .form-input_container {
   width: 100%;
   position: relative;
+  margin: 15px 0;
 }
 .form-input_container__emoji {
   width: 50%;
   min-width: 96px;
+  margin: 15px 0;
 }
 .form-input_emoji {
   padding-left: 12px !important;
 }
 .form-input {
+  color: var(--tg-theme-text-color);
   width: 100%;
   padding: 7px;
-  border-radius: 6px;
+  border-radius: 18px;
   font-size: 16px;
-  background: #fbfbfb;
+  background: var(--tg-theme-secondary-bg-color, #fbfbfb);
   border: 2px solid transparent;
   height: 36px;
-  box-shadow: 0 0 0 1px #dddddd, 0 2px 4px 0 rgb(0 0 0 / 7%),
-    0 1px 1.5px 0 rgb(0 0 0 / 5%);
-  :focus {
-    border: 2px solid #000;
-    border-radius: 4px;
-  }
+  padding-left: 12px !important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.form-input::placeholder {
+  font-size: 16px;
+  color: var(--tg-theme-hint-color, gray);
+  opacity: 1;
+}
+.datepicker-open {
+  outline: none !important;
+  border: 2px solid var(--tg-theme-button-color, blue);
+}
+.form-input:focus {
+  outline: none !important;
+  border: 2px solid var(--tg-theme-button-color, blue);
 }
 .error {
   position: absolute;
   line-height: 20px;
   white-space: nowrap;
   font-size: 14px;
-  color: #ff0000;
+  color: var(--tg-theme-destructive-text-color);
+}
+.container {
+  width: 100%;
+}
+.section {
+  background: var(--tg-theme-section-bg-color, #ababab);
+  border-radius: 18px;
+  padding: 20px 20px 10px 20px;
+}
+.section:last-child {
+  border-bottom: none;
 }

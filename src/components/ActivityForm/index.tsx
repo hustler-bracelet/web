@@ -8,8 +8,8 @@ const ActivityForm: React.FC<Omit<NestedFormPropsType, "id">> = ({
   errors,
 }) => {
   return (
-    <>
-      <Title title="Название активности" />
+    <div className="container">
+      <Title title="📝 Название активности" size="sub" />
       <div className="form-input_title">
         <Controller
           name="main_activity_emoji"
@@ -34,7 +34,6 @@ const ActivityForm: React.FC<Omit<NestedFormPropsType, "id">> = ({
         <Controller
           name="main_activity_name"
           control={control}
-          defaultValue=""
           render={({ field }) => (
             <div className="form-input_container">
               <input
@@ -52,17 +51,18 @@ const ActivityForm: React.FC<Omit<NestedFormPropsType, "id">> = ({
           )}
         />
       </div>
-      <Title title="Описание активности" />
+      <Title title="📝 Описание активности" size="sub" />
       <Controller
         name="main_activity_description"
         control={control}
-        defaultValue=""
         render={({ field }) => (
           <div className="form-input_container">
             <FormatTextArea
               value={field.value}
               onChange={field.onChange}
+              errors={errors}
               withItalic
+              name="main_activity_description"
             />
             {errors.main_activity_description ? (
               <p className="error">
@@ -74,7 +74,7 @@ const ActivityForm: React.FC<Omit<NestedFormPropsType, "id">> = ({
           </div>
         )}
       />
-    </>
+    </div>
   );
 };
 

@@ -1,0 +1,13 @@
+.default-button {
+  background: var(--tg-theme-button-color, blue);
+  width: 100%;
+  border-radius: 18px;
+  height: 36px;
+  outline: none;
+  border: none;
+  margin-top: 10px;
+}
+.default-button_text {
+  font-weight: 600;
+  color: var(--tg-theme-button-text-color, white);
+}
