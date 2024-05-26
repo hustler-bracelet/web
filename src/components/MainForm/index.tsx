@@ -265,9 +265,6 @@ const MainForm = () => {
             setNichesCount((state) => state + 1);
           }}
         />
-        <button type="submit" onClick={() => handledSubmit()}>
-          submit
-        </button>
       </form>
     </div>
   );
