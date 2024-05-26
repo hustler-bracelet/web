@@ -98,8 +98,8 @@ const MainForm = () => {
           try {
             api.sendData(finalData);
             TELEGRAM.showAlert("Форма успешно отправлена!");
-            console.log(finalData);
           } catch (e) {
+            TELEGRAM.showAlert("Ошибка отправки формы");
             console.error("Submit error: ", e);
           }
         }
