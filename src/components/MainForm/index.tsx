@@ -10,6 +10,7 @@ import "./mainForm.css";
 import { useEffect, useState } from "react";
 import { handleFocus, parseFormattedTextField } from "../../utils/tools";
 import Button from "../Button";
+import * as api from "../../api";
 
 const MainForm = () => {
   const {
@@ -94,8 +95,13 @@ const MainForm = () => {
       },
       (buttonId: string) => {
         if (buttonId === "submit") {
-          TELEGRAM.showAlert("Форма успешно отправлена!");
-          console.log(finalData);
+          try {
+            api.sendData(finalData);
+            TELEGRAM.showAlert("Форма успешно отправлена!");
+            console.log(finalData);
+          } catch (e) {
+            console.error("Submit error: ", e);
+          }
         }
       }
     );
@@ -244,6 +250,9 @@ const MainForm = () => {
             setNichesCount((state) => state + 1);
           }}
         />
+        <button type="submit" onClick={() => handledSubmit()}>
+          submit
+        </button>
       </form>
     </div>
   );
