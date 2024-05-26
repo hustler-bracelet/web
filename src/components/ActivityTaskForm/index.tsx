@@ -1,48 +1,16 @@
 import { Controller } from "react-hook-form";
-import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import Title from "../Title";
 import FormatTextArea from "../FormatTextArea";
 import { NestedFormPropsType } from "../../utils/types";
 import "./activityTaskForm.css";
-import { forwardRef, useState } from "react";
-import { TELEGRAM } from "../../utils/constants";
-import ru from "date-fns/locale/ru";
+import { Datepicker } from "../Datepicker";
 
-interface DatepickerCustomInputProps {
-  value: string;
-  onClick: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
-  isOpen: boolean;
-  customName: string;
-}
 const ActivityTaskForm: React.FC<NestedFormPropsType> = ({
   control,
   errors,
   id,
 }) => {
-  const DatepickerCustomInput = forwardRef<
-    HTMLButtonElement,
-    DatepickerCustomInputProps
-  >(({ customName, value, onClick, isOpen }, ref) => {
-    return (
-      <button
-        name={customName}
-        className={`form-input ${isOpen ? "datepicker-open" : ""}`}
-        onClick={(event) => {
-          event.preventDefault();
-          event.stopPropagation();
-          TELEGRAM.HapticFeedback.impactOccurred("light");
-          onClick(event);
-        }}
-        ref={ref}
-      >
-        {value && <p>{value}</p>}
-        {!value && <p className="hint">Выбери дату</p>}
-      </button>
-    );
-  });
-  const [isDatePickerOpen, setIsDatePickerOpen] = useState<boolean>(false);
-
   return (
     <div className="container">
       <Title title={`📌 Задание ниши #${id + 1}`} bold size="default" />
@@ -98,29 +66,10 @@ const ActivityTaskForm: React.FC<NestedFormPropsType> = ({
         control={control}
         render={({ field }) => (
           <div className="form-input_container">
-            <DatePicker
-              selected={field.value}
+            <Datepicker
               onChange={field.onChange}
-              minDate={new Date()}
-              showTimeSelect
-              timeFormat="HH:mm"
-              timeIntervals={15}
-              dateFormat="dd/MM/yyyy HH:mm"
-              calendarStartDay={1}
-              timeCaption="Время"
-              //@ts-ignore
-              locale={ru}
-              customInput={
-                <DatepickerCustomInput
-                  isOpen={isDatePickerOpen}
-                  //@ts-ignore
-                  value={field.value}
-                  onClick={field.onChange}
-                  customName={field.name}
-                />
-              }
-              onCalendarOpen={() => setIsDatePickerOpen(true)}
-              onCalendarClose={() => setIsDatePickerOpen(false)}
+              value={field.value}
+              name={field.name}
             />
             {errors.niches?.[id]?.activity_task_date ? (
               <p className="error">

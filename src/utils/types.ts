@@ -44,6 +44,7 @@ type ActivityType = {
   description: string;
   reward: number;
   prizes_number: number;
+  activity_deadline: string;
 };
 
 /**
@@ -81,6 +82,7 @@ export type ActivityFormType = {
   niches?: NicheFormType[];
   reward: number;
   prizes_number: number;
+  activity_deadline: Date;
 };
 
 /**

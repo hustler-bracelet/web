@@ -66,7 +66,7 @@ export const SCHEMA = yup.object().shape({
     .typeError("❗️ Должно быть числом")
     .required("❗️ Обязательное поле")
     .min(1, "❗️ Число должно быть больше 0"),
-
+  activity_deadline: yup.date().required("❗️ Обязательное поле"),
   // Ниши
   niches: yup
     .array()
