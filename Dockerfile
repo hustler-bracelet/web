@@ -5,7 +5,6 @@ ENV PATH /app/node_modules/.bin:$PATH
 
 COPY package.json ./
 
-
 RUN npm --loglevel verbose install -g npm@latest
 
 RUN npm install
