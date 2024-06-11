@@ -12,7 +12,7 @@ import { Control, FieldErrors } from "react-hook-form";
 type TaskType = {
   name: string;
   description: string;
-  expiration_date: string;
+  deadline: string;
   points: number;
 };
 
@@ -42,10 +42,21 @@ export type NicheType = {
 type ActivityType = {
   name: string;
   description: string;
-  reward: number;
-  prizes_number: number;
-  activity_deadline: string;
+  fund: number;
+  total_places: number;
+  deadline: string;
 };
+
+/**
+ * User для формы
+ * 
+ * @typedef {UserType}
+ * @property {number} telegram_id - telegram id
+ */
+
+type UserType = {
+  telegram_id: number;
+}
 
 /**
  * Результирующий объект
@@ -53,10 +64,12 @@ type ActivityType = {
  * @export
  * @typedef {ResultDataType}
  * @property {ActivityType} activity - активность
+ * @property {UserType} user - пользователь
  * @property {NicheType[]} niches - ниши
  */
 export type ResultDataType = {
   activity: ActivityType;
+  user: UserType;
   niches: NicheType[];
 };
 

@@ -47,6 +47,11 @@ const MainForm = () => {
   };
 
   const onSubmit = (data: ActivityFormType) => {
+
+    // Игорь прости за кринж АХХАХ
+    const urlParams = new URLSearchParams(window.location.search);
+    const queryParam = urlParams.get('telegram_id');
+
     const {
       main_activity_emoji,
       main_activity_name,
@@ -59,9 +64,13 @@ const MainForm = () => {
       activity: {
         name: `${main_activity_emoji} ${main_activity_name}`,
         description: parseFormattedTextField(main_activity_description),
-        reward,
-        prizes_number,
-        activity_deadline: activity_deadline.toISOString(),
+        fund: reward,
+        total_places: prizes_number,
+        deadline: activity_deadline.toISOString(),
+      },
+      user: {
+        // бля это гпт предложил, не бей
+        telegram_id: queryParam ? parseInt(queryParam) : 0
       },
       niches:
         data.niches?.map((niche) => {
@@ -73,7 +82,7 @@ const MainForm = () => {
               description: parseFormattedTextField(
                 niche.activity_task_description
               ),
-              expiration_date: niche.activity_task_date.toISOString(),
+              deadline: niche.activity_task_date.toISOString(),
               points: niche.activity_task_points_amount,
             },
           };
