@@ -2,7 +2,7 @@ import axios from "axios";
 import { ResultDataType } from "../utils/types";
 
 export const api = axios.create({
-  baseURL: "https://api.c.nsdkin.ru",
+  baseURL: "https://b-front.capt.lifeshare.space",
 });
 
 export const sendData = async (data: ResultDataType) => {
